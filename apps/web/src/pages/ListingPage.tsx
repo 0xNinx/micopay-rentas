@@ -24,6 +24,7 @@ export default function ListingPage() {
   useEffect(() => {
     if (!l) return;
     setQErr(null);
+    setQ(null);
     setQuoteDates(null);
     const reqId = ++quoteReqRef.current;
     api.quote(l.id, checkIn, checkOut).then((quote) => {
@@ -49,10 +50,12 @@ export default function ListingPage() {
       nav(`/bookings/${r.id}`);
     } catch (e) {
       const errMsg = (e as Error).message;
-      setErr(errMsg);
       if (errMsg === 'Those dates are already booked') {
+        setErr('Those dates are no longer available. Please choose different dates.');
         setQ(null);
         setQuoteDates(null);
+      } else {
+        setErr(errMsg);
       }
       reload();
     } finally {
